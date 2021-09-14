@@ -6,4 +6,4 @@
 	url = git@github.com:czernous/docker-sample-project-auth.git
 [submodule "frontend"]
 	path = frontend
-	url = git@github.com:czernous/sample-docker-project-frontend.git
+	url = git@github.com:czernous/docker-sample-project-frontend.git
