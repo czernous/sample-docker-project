@@ -2,5 +2,8 @@
 	path = api
 	url = git@github.com:czernous/sample-docker-project-api.git
 [submodule "auth"]
-	path = api
+	path = auth
 	url = git@github.com:czernous/sample-docker-project-auth.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:czernous/sample-docker-project-frontend.git
