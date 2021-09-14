@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      dockerfile: Dockerfile.prod
+      context: ./frontend
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+    container_name: sample-docker-frontend
+    command: serve -s build -l 3000
+    networks:
+      - sample-docker-network
+
+  api:
+    build:
+      context: ./api
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+    container_name: sample-docker-api
+    command: npm run start
+    restart: unless-stopped
+    environment:
+      - PORT=5000
+      - HOST=http://sample-docker.com
+      - MONGO_URL=mongodb://api_db:27017/api
+      - AUTH_API_URL=http://auth:5001
+    depends_on:
+      - api_db
+    networks:
+      - sample-docker-network
+
+  auth:
+    build:
+      context: ./auth
+      args:
+        NODE_VERSION: ${NODE_VERSION}
+    container_name: sample-docker-auth
+    command: npm run start
+    restart: unless-stopped
+    environment:
+      - PORT=5001
+      - HOST=http://sample-docker.com
+      - MONGO_URL=mongodb://auth_db:27017/auth
+      - API_URL=http://api:5000
+    depends_on:
+      - auth_db
+    networks:
+      - sample-docker-network
+
+  auth_db:
+    image: mongo:latest
+    container_name: sample-docker-auth-db
+    volumes:
+      - mongodb_auth:/data/db 
+    networks:
+      - sample-docker-network
+
+  api_db:
+    image: mongo:latest
+    container_name: sample-docker-api-db
+    volumes:
+      - mongodb_api:/data/db
+    networks:
+      - sample-docker-network
+  
+  nginx:
+    image: nginx:stable-alpine
+    container_name: sample-docker-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - frontend
+      - api
+      - auth
+    networks:
+        - sample-docker-network
+
+volumes:
+  mongodb_api:
+  mongodb_auth:
+
+networks:
+    sample-docker-network:
+      driver: bridge
