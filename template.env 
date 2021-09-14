@@ -1,2 +1,8 @@
 #NODE CONFIG
 NODE_VERSION=14.17.6-alpine
+
+NGINX_PORT=80
+# dev host name (needs to be added to hosts file)
+DEV_NGINX_HOST=
+# production host name
+PROD_NGINX_HOST=

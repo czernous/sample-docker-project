@@ -1,6 +1,6 @@
 server {
-    listen 80;
-    server_name sample-docker.com;
+    listen ${NGINX_PORT};
+    server_name ${NGINX_HOST};
 
     location / {
         proxy_pass http://frontend:3000;

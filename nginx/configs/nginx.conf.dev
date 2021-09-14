@@ -1,6 +1,8 @@
+
+
 server {
-    listen 80;
-    server_name sample-docker.local;
+    listen ${NGINX_PORT};
+    server_name ${NGINX_HOST} localhost;
 
     location / {
         proxy_pass http://frontend:3000;

@@ -20,4 +20,6 @@ services:
       - ./auth/src:/usr/src/app/src
   nginx:
     volumes:
-      - ./nginx/nginx.conf.dev:/etc/nginx/conf.d/nginx.conf
+      - ./nginx/configs/nginx.conf.dev:/etc/nginx/templates/default.conf.template
+    environment:
+      - NGINX_HOST=${DEV_NGINX_HOST}
