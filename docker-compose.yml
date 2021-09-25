@@ -68,7 +68,7 @@ services:
     build: ./nginx
     container_name: sample-docker-nginx
     ports:
-      - "80:80"
+      - "${NGINX_EXPOSED_PORT}:80"
     volumes:
       - ./nginx/configs/nginx.conf.prod:/etc/nginx/templates/default.conf.template
       - .env:/etc/nginx/environment/.env
@@ -82,13 +82,36 @@ services:
       - frontend
       - api
       - auth
+    labels:
+      - traefik.backend=sample
+      - traefik.frontend.rule=Host:sample-docker.com
+      - traefik.docker.network=shared_external_network
+      - traefik.port=80
+      # - "traefik.enable=true"
+      # - "traefik.port=80"
+      # - "traefik.docker.network=shared_external_network"
+      # - "traefik.http.routers.sample.rule=Host(`sample-docker.com`)"
+      # - "traefik.http.routers.sample.entrypoints=web"
+      # - "traefik.http.routers.sample.middlewares=https_redirect"
+
+      # - "traefik.http.routers.sample-secure.rule=Host(`sample-docker.com`)"
+      # - "traefik.http.routers.sample-secure.entrypoints=websecure"
+      # - "traefik.http.routers.sample-secure.tls=true"
+
+      # - "traefik.http.middlewares.https_redirect.redirectscheme.scheme=https"
+      # - "traefik.http.middlewares.https_redirect.redirectscheme.permanent=true"
+
     networks:
         - sample-docker-network
+        - shared_external_network
 
 volumes:
   mongodb_api:
   mongodb_auth:
 
 networks:
-    sample-docker-network:
+  shared_external_network:
+    external: true  
+  sample-docker-network:
       driver: bridge
+      external: false

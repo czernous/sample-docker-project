@@ -19,6 +19,8 @@ services:
     volumes:
       - ./auth/src:/usr/src/app/src
   nginx:
+    ports:
+    - "80:80"
     volumes:
       - ./nginx/configs/nginx.conf.dev:/etc/nginx/templates/default.conf.template
     environment:
